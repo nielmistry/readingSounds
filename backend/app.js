@@ -53,5 +53,24 @@ function saveJSON(resp)
 
 amazingAI();
 
+//takes in the json file and then returns the largest Text_to_emotion_sum
 
+var joy;
+function get_values()
+{
+  var fs = require("fs");
+  var contents = fs.readFileSync("response.json");
+  var jsonContent = JSON.parse(contents);
+  var max = 0;
+  var max_index = -1;
+for(iterator = 0; iterator < jsonContent.document_tone.tones.length; iterator++)
+{
+  console.log("this is the something value", jsonContent.document_tone.tones[iterator].score);
+  if (max < jsonContent.document_tone.tones[iterator].score)
+    max = jsonContent.document_tone.tones[iterator].score;
+    max_index = iterator;
+}
+console.log("The type of music I want is", jsonContent.document_tone.tones[max_index].tone_id)
+};
+get_values();
 
