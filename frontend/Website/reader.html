@@ -83,21 +83,7 @@ Reading Sounds
           <div id="next" onclick="book.nextPage();" class="arrow">›</div>
         </div>
         <script>
-            "use strict";
-            var book = ePub("got.epub");
-            book.renderTo("area");
-            document.getElementById('btnSelectBook').addEventListener('change', function (e) {
-                var file = e.target.files[0];
-                if (window.FileReader) {
-                    var reader = new FileReader();
-                    reader.onload = function (e) {
-                        book.destroy();
-                        book = ePub({bookPath: e.target.result});
-                        book.renderTo("area");
-                    }.bind(this);
-                    reader.readAsArrayBuffer(file);
-                }
-            });
+          
         </script>
     </body>
 </html>

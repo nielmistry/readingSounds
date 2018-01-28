@@ -1,26 +1,29 @@
 var gluten_info;
+var gluten_link;
+var chapterGiven;
 var book_wanted;
 var chapter_wanted_minus_1 = 11;//put input here
 var text_link;
+var toneID;
 var scan_chapter = 0;
 var fs = require('fs')
 var data = '';
 //below reads  in the json and ouputs the link to text file.
 //below did not word due to the json file having 'text/plain; charset=us-ascii'
-function gluten_to_text (){
-    var fs = require('fs');
-    var contents = fs.readFileSync('gluten_info.json')//may jhave to change the file name
+function gluten_to_text (name){
+  var fs = require('fs');
+    var contents = fs.readFileSync('http://gutendex.com/books/?search=' + name)//may jhave to change the file name
     var jsonContent = JSON.parse(contents);
     text_link = jsonContent.results[0].formats['text/plain; charset=us-ascii'];
-};
-gluten_to_text();
+  };
+
 
 //below takes the link and downloads it to directory
 function link_to_file(){
   var http = require('http');
   var fs = require('fs');
 
- var file = fs.createWriteStream("gluten_info.txt");
+  var file = fs.createWriteStream("gluten_info.txt");
   var request = http.get(text_link, function(response) {
     var stream = response.pipe(file);
     stream.on('finish',function () {read_to_desired()});
@@ -67,44 +70,44 @@ var done;
 JSONify();
 
 function JSONify(){
-	var data = fs.readFileSync('Chapter_1.txt','utf-8');
+	var data = fs.readFileSync('input_chapter.txt','utf-8');
 	var dataNew = data.replace(/"/g,'\\"');
-	 dataNew = dataNew.replace(/[^\x00-\x7F]/g,'');
-	dataNew = dataNew.replace(/\n/g,'');
-	newdata = '{\n  \"text\": \" ' + dataNew + '\"\n}';
-	fs.writeFileSync('Chapter_1.json',newdata,'utf-8');
-	done = fs.readFileSync('Chapter_1.json','utf-8');
-	console.log("JSONIFY DONE");
+  dataNew = dataNew.replace(/[^\x00-\x7F]/g,'');
+  dataNew = dataNew.replace(/\n/g,'');
+  newdata = '{\n  \"text\": \" ' + dataNew + '\"\n}';
+  fs.writeFileSync('output.json',newdata,'utf-8');
+  done = fs.readFileSync('output.json','utf-8');
+  console.log("JSONIFY DONE");
 }
 
 console.log(done);
 var response;
 function amazingAI(){
-        var ToneAnalyserV3 = require('watson-developer-cloud/tone-analyzer/v3');
-        var tone_analyser = new ToneAnalyserV3({
-          username: '859b35a5-f631-4683-9ba3-52add7d63165',
+  var ToneAnalyserV3 = require('watson-developer-cloud/tone-analyzer/v3');
+  var tone_analyser = new ToneAnalyserV3({
+    username: '859b35a5-f631-4683-9ba3-52add7d63165',
           password: 'hpHkNrMGSeOe',//remove before git (maybe)
           version_date: '2017-09-21'
         });
 
-        var params = {
-          'tone_input' : require('./Chapter_1.json'),
-          'content_type' : 'application/json',
-	'sentences' : false
-        };
+  var params = {
+    'tone_input' : require('./output.json'),
+    'content_type' : 'application/json',
+    'sentences' : false
+  };
 
 
-        tone_analyser.tone(params, function(error, response){
-          if (error)
-          console.log('error:', error);
-          else
-	{
-            console.log(JSON.stringify(response,null,2));
-		saveJSON(response);
-		get_values();
-	}
-        });
-      };
+  tone_analyser.tone(params, function(error, response){
+    if (error)
+      console.log('error:', error);
+    else
+    {
+      console.log(JSON.stringify(response,null,2));
+      saveJSON(response);
+      get_values();
+    }
+  });
+};
 
 function saveJSON(resp)
 {
@@ -129,6 +132,7 @@ function get_values()
     max_index = iterator;
   }
   console.log("The type of music I want is", jsonContent.document_tone.tones[max_index].tone_id)
+  toneID = jsonContent.document_tone.tones[max_index].tone_id;
 };
 
 amazingAI();
@@ -140,7 +144,9 @@ app.get('/', function(req, res) {
 });
 
 app.get('/data/search/:name-:chapter', function(req, res) {
-res.send({"url": sendURL(req.params.name)});
+  gluten_to_text(name);
+  chapter_wanted_minus_1 = chapter - 1;
+  res.send({"url": sendURL(req.params.name),"tone" : toneID});
 });
 
 app.listen(1337, function() {
@@ -153,16 +159,16 @@ function sendURL(bookName)
 {
 	if(bookName === "Alice in Wonderland")
 	{
-	return 'http:\/\/www.gutenberg.org\/ebooks\/11.epub.noimages';
-	}
-	else if(bookName === "My Man Jeeves")
-	{
-	return 'http:\/\/www.gutenberg.org\/ebooks\/8164.epub.images';
-	}
-	else
-	{
-	return 'google.com';
-	}
+   return 'http:\/\/www.gutenberg.org\/ebooks\/11.epub.noimages';
+ }
+ else if(bookName === "My Man Jeeves")
+ {
+   return 'http:\/\/www.gutenberg.org\/ebooks\/8164.epub.images';
+ }
+ else
+ {
+   return 'google.com';
+ }
 }
 
 /*

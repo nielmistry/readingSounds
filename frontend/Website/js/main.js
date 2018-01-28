@@ -19,26 +19,48 @@ function goToPage()
         console.log("YOOOO");
     }
 }
+function goToAttrib()
+{
+    window.location.href = 'attrib.html';
+}
 
 function loadInEpub()
 {
+
+    console.log("lets do shit");
     var query = window.location.search;
     if (query.substring(0, 1) == '?') {
         query = query.substring(1);
     }
 
     console.log(query);
-    var JSONGuten = getJSON(query, function(data)
-        {
-            console.log(data)
-        });
-    var gutenDexResult = JSON.parse(JSONGuten);
-    console.log(gutenDexResult);
+    // var JSONGuten = getJSON(query, function(data)
+    //     {
+    //         console.log(data)
+    //     });
+    // var gutenDexResult = JSON.parse(JSONGuten);
+    // console.log(gutenDexResult);
+    loadBook(query);
 }
 
-function lol()
+function loadBook(bookName)
 {
-    console.log(bookName);
+      "use strict";
+           bookName = bookName + ".epub";
+            var book = ePub(bookName);
+            book.renderTo("area");
+            document.getElementById('btnSelectBook').addEventListener('change', function (e) {
+                var file = e.target.files[0];
+                if (window.FileReader) {
+                    var reader = new FileReader();
+                    reader.onload = function (e) {
+                        book.destroy();
+                        book = ePub({bookPath: e.target.result});
+                        book.renderTo("area");
+                    }.bind(this);
+                    reader.readAsArrayBuffer(file);
+                }
+            });
 }
 
 function getJSON(word, callback) {

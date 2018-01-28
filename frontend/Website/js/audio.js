@@ -1,12 +1,12 @@
 var play_index;
 var songs = [
-  ["Anger",/*url*/],
+  ["Anger", 'https://incompetech.com/music/royalty-free/mp3-royaltyfree/Volatile%20Reaction.mp3' /*url*/],
   ["Fear",'https://incompetech.com/music/royalty-free/mp3-royaltyfree/Unseen%20Horrors.mp3'],
   ["Joy",'https://incompetech.com/music/royalty-free/mp3-royaltyfree/Jazz%20Brunch.mp3'],
-  ["Sadness",'https://incompetech.com/music/royalty-free/mp3-royaltyfree/The%20Curtain%20Rises.mp3'/*url*/],
-  ["Confidence",/*url*/],
-  ["Analytical",/*url*/],
-  ["Tentative",/*url*/],
+  ["Sadness",'https://incompetech.com/music/royalty-free/mp3-royaltyfree/Anguish.mp3'/*url*/],
+  ["Confidence", 'https://incompetech.com/music/royalty-free/mp3-royaltyfree/Son%20Of%20A%20Rocket.mp3'/*url*/],
+  ["Analytical", 'https://incompetech.com/music/royalty-free/mp3-royaltyfree/Hard%20Boiled.mp3'/*url*/],
+  ["Tentative", 'https://incompetech.com/music/royalty-free/mp3-royaltyfree/The%20Chamber.mp3'/*url*/],
 ];
 
 var toPlay = new Audio(songs[-1][1]);
@@ -28,9 +28,9 @@ function which_song(tone){
   play_index = 6;
 }
 
-function play()
+function play(tone)
 {
-  var tone = 'fear';// get from server 
+  // get tone passed into this
   which_song(tone);
   toPlay = new Audio(songs[play_index][1])
   toPlay.play();
