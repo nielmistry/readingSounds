@@ -21,6 +21,8 @@ Reading Sounds
 
         <script src="js/main.js"></script>
 
+        <script src="js/audio.js"></script>
+
         <style type="text/css">
           body {
             overflow: hidden;
@@ -72,8 +74,8 @@ Reading Sounds
           }
         </style>
     </head>
-    <body onload="loadInEpub()">
-    
+    <body onload="loadInEpub();">
+        <script> play(); </script>
         <input type="file" id="btnSelectBook"/>
         <div id="main">
           <div id="prev" onclick="book.prevPage();" class="arrow">‹</div>
