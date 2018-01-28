@@ -8,7 +8,7 @@ function JSONify(){
 	var data = fs.readFileSync('Chapter_1.txt','utf-8');
 	var dataNew = data.replace(/"/g,'\\"');
 	 dataNew = dataNew.replace(/[^\x00-\x7F]/g,'');
-	dataNew = dataNew.replace(/\n/g,' ');
+	dataNew = dataNew.replace(/\n/g,'');
 	newdata = '{\n  \"text\": \" ' + dataNew + '\"\n}';
 	fs.writeFileSync('Chapter_1.json',newdata,'utf-8');
 	done = fs.readFileSync('Chapter_1.json','utf-8');
