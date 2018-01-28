@@ -1,29 +1,60 @@
-book = null;
-document.getElementById('bookChooser').addEventListener('change', function(e) {
-    var firstFile = e.target.files[0];
-    if (window.FileReader) {
-        var reader = new FileReader();
-        reader.onload = function(e) {
-            book = ePub({
-                bookPath: e.target.result
-            });
+var bookName;
 
-            book.renderTo("area");
-            /* Replace area with the id for your div to put the book in */
-        }.bind(this);
-
-        reader.readAsArrayBuffer(firstFile);
-    } else {
-        alert("Your browser does not support the required features. Please use a modern browser such as Google Chrome, or Mozilla Firefox");
+function hideAlerts()
+{
+    document.getElementById("alert1").style.display = "none";
+}
+function goToPage()
+{
+    if(document.getElementById("bookName").value != '')
+    {
+        bookName = document.getElementById("bookName").value;
+        window.location.href = 'reader.html?' + bookName;
+        lol();
     }
-});
-
-
-
-document.getElementById("prev").onclick = function() {
-    book.prevPage();
+    
+    else
+    {
+        document.getElementById("alert1").style.display = "block";
+        console.log("YOOOO");
+    }
 }
 
-document.getElementById("next").onclick = function() {
-    book.nextPage();
+function loadInEpub()
+{
+    var query = window.location.search;
+    if (query.substring(0, 1) == '?') {
+        query = query.substring(1);
+    }
+
+    console.log(query);
+    var JSONGuten = getJSON(query, function(data)
+        {
+            console.log(data)
+        });
+    var gutenDexResult = JSON.parse(JSONGuten);
+    console.log(gutenDexResult);
 }
+
+function lol()
+{
+    console.log(bookName);
+}
+
+function getJSON(word, callback) {
+        
+        var returnedWords;
+        var requestURL = 'https://api.datamuse.com/words?ml=' + word;
+        var request = new XMLHttpRequest();
+        request.open('GET', requestURL);
+        request.responseType = 'json';
+        request.send();
+
+
+        request.onload = function()
+        {
+
+            callback(request.response);
+        }
+
+    }

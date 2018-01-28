@@ -3,48 +3,24 @@
 <title>
 Reading Sounds
 </title>
-
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 <link rel="stylesheet" href="js/stylesheet.css">
-
-<!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/js/bootstrap.min.js" integrity="sha384-a5N7Y/aK3qNeh15eJKGWxsqtnX/wWdSZSKp+81YjTmS15nvnvxKHuzaWwXHDli+4" crossorigin="anonymous"></script> -->
-
-<script src="js/zip.min.js"></script>
-<script src="js/epub.min.js"></script>
 <script src="js/main.js"></script>
-
-<!-- <script src="js/zip.min.js"></script> -->
-
 </head>
 
-<body>
+<body onload="hideAlerts()">
 <div class="container-fluid">
 <div class="jumbotron">
+<h1> Welcome to Reading Sounds! </h1>
+<br>  <h3> Please enter the name of the book </h3>
 
-<h1> Welcome to Reading Sounds!</h1>
+<div class="alert alert-warning" id="alert1"> Put something in! </div>
 
-
-
+<div class="input-group input-group-lg">
+  <div class="input-group-prepend">
+    <span class="input-group-text" id="inputGroup-sizing-lg">Book name</span>
+  </div>
+  <input type="text" class="form-control" aria-label="Book name" aria-describedby="inputGroup-sizing-sm" id="bookName">
 </div>
-<div id="reader">
-    <div id="toolbar">
-        <div class="left">
-            <span>Demo by <a href="http://github.com/geek1011" target="_blank">geek1011</a></span>
-        </div>
-        <div class="center">
-            <input type="file" accept="application/epub+zip" id="bookChooser">
-        </div>
-        <div class="right">
-            <button id="prev">&lt;</button>
-            <button id="next">&gt;</button>
-        </div>
-    </div>
-
-    <div id="area">
-
-    </div>
+<button id="subForm" class="btn btn-primary" onclick="goToPage()"> Go! </button>
 </div>
-
-</div>
-
-</body>
