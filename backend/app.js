@@ -1,6 +1,68 @@
-var fs = require('fs');
-const { URL } = require('url');
-const myURL = new URL('/files/1524/1524-0.txt','file://www.gutenburg.org/');
+var gluten_info;
+var book_wanted;
+var chapter_wanted_minus_1 = 11;//put input here
+var text_link;
+var scan_chapter = 0;
+var fs = require('fs')
+var data = '';
+//below reads  in the json and ouputs the link to text file.
+//below did not word due to the json file having 'text/plain; charset=us-ascii'
+function gluten_to_text (){
+    var fs = require('fs');
+    var contents = fs.readFileSync('gluten_info.json')//may jhave to change the file name
+    var jsonContent = JSON.parse(contents);
+    text_link = jsonContent.results[0].formats['text/plain; charset=us-ascii'];
+};
+gluten_to_text();
+
+//below takes the link and downloads it to directory
+function link_to_file(){
+  var http = require('http');
+  var fs = require('fs');
+
+ var file = fs.createWriteStream("gluten_info.txt");
+  var request = http.get(text_link, function(response) {
+    var stream = response.pipe(file);
+    stream.on('finish',function () {read_to_desired()});
+  });
+};
+
+link_to_file();
+
+//below reads in chunk by chunk and only the desired chapter
+function read_to_desired(){
+
+  var string_chapter = fs.readFileSync('gluten_info.txt', "utf8");
+  string_chapter = string_chapter.replace(/Chapter/g, "CHAPTER");
+  var index = string_chapter.indexOf("CHAPTER");
+  var start;
+  var end;
+  while (string_chapter.indexOf("CHAPTER") >= 0 && scan_chapter <= chapter_wanted_minus_1)
+  {
+    start = string_chapter.indexOf("CHAPTER");
+    string_chapter = string_chapter.replace(/CHAPTER/, "");
+    end = string_chapter.indexOf("CHAPTER");
+    scan_chapter++;
+  }
+  if (end < 0)
+  {
+    var ending = string_chapter.length;
+    data = string_chapter.substring(start, ending)
+  }
+  else
+  {
+    data = string_chapter.substring(start, end);
+  }
+  write_to_file();
+};
+//below takes in the data of the chapter and makes it into a text read
+//to later be  converted into a json
+function write_to_file(){
+  var fs = require('fs');
+  var input = fs.writeFileSync('input_chapter.txt', data,'utf-8');
+  console.log("Done!!");
+};
+
 var done;
 JSONify();
 
@@ -70,6 +132,50 @@ function get_values()
 };
 
 amazingAI();
-//get_values();
+var express = require('express');
+var app = express();
+
+app.get('/', function(req, res) {
+  res.send('Hello World!');
+});
+
+app.get('/data/search/:name-:chapter', function(req, res) {
+res.send({"url": sendURL(req.params.name)});
+});
+
+app.listen(1337, function() {
+  console.log('Example app listening on port 3000!');
+});
 
 
+
+function sendURL(bookName)
+{
+	if(bookName === "Alice in Wonderland")
+	{
+	return 'http:\/\/www.gutenberg.org\/ebooks\/11.epub.noimages';
+	}
+	else if(bookName === "My Man Jeeves")
+	{
+	return 'http:\/\/www.gutenberg.org\/ebooks\/8164.epub.images';
+	}
+	else
+	{
+	return 'google.com';
+	}
+}
+
+/*
+
+http.createServer((request, response) => {
+  response.setHeader('Access-Control-Allow-Origin', '*');
+  let body = [];
+  request.on('data', (chunk) => {
+    body.push(chunk);
+  }).on('end', () => {
+    body = Buffer.concat(body).toString();
+    response.end(body);
+  });
+}).listen(1337);
+
+*/
