@@ -39,7 +39,7 @@ function amazingAI(){
     {
       console.log(JSON.stringify(response,null,2));
       // saveJSON(response);
-      get_values();
+      get_values(response);
     }
   });
 };
@@ -57,11 +57,11 @@ function saveJSON(resp)
 //takes in the json file and then returns the largest Text_to_emotion_sum
 
 var joy;
-function get_values()
+function get_values(resp)
 {
   // var fs = require("fs");
   // var contents = fs.readFileSync("response.json");
-  var jsonContent = JSON.parse(response);
+  var jsonContent = JSON.parse(resp);
   var max = 0;
   var max_index = -1;
   for(iterator = 0; iterator < jsonContent.document_tone.tones.length; iterator++)
