@@ -9,12 +9,13 @@ function JSONify(){
 	var dataNew = data.replace(/"/g,'\\"');
 	 dataNew = dataNew.replace(/[^\x00-\x7F]/g,'');
 	dataNew = dataNew.replace(/\n/g,' ');
-	newdata = '{\n  \"text\": \" ' + dataNew + '\"\n}';
+	newdata = '{\n\"text\": \"' + dataNew + '\"\n}';
 	fs.writeFileSync('Chapter_1.json',newdata,'utf-8');
 	done = fs.readFileSync('Chapter_1.json','utf-8');
 	console.log("JSONIFY DONE");
 }
 
+console.log(done);
 var response;
 function amazingAI(){
         var ToneAnalyserV3 = require('watson-developer-cloud/tone-analyzer/v3');
@@ -25,8 +26,9 @@ function amazingAI(){
         });
 
         var params = {
-          'tone_input' : require('./Chapter_1.json'),
-          'content_type' : 'application/json'
+          'tone_input' : require('./test.json'),
+          'content_type' : 'application/json',
+	'sentences' : false
         };
 
 
@@ -34,12 +36,22 @@ function amazingAI(){
           if (error)
           console.log('error:', error);
           else
-            console.log(response);
-//		fs.writeFileSync('response.json',response,'utf-8');
+	{
+            console.log(JSON.stringify(response,null,2));
+		saveJSON(response);
+	}
         });
       };
+
+function saveJSON(resp)
+{
+	var jsonfile = require('jsonfile');
+	var file = './response.json';
+	jsonfile.writeFile(file,resp,function(err){
+	console.error(err)})
+};
+
 amazingAI();
-console.log(response);
 
 
 
