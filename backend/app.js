@@ -70,10 +70,10 @@ var done;
 JSONify();
 
 function JSONify(){
-	var data = fs.readFileSync('input_chapter.txt','utf-8');
+	var data = fs.readFileSync('Chapter_1.txt','utf-8');
 	var dataNew = data.replace(/"/g,'\\"');
-  dataNew = dataNew.replace(/[^\x00-\x7F]/g,'');
-  dataNew = dataNew.replace(/\n/g,'');
+ dataNew = dataNew.replace(/[^\x00-\x7F]/g,'');
+ dataNew = dataNew.replace(/\n/g,'');
   newdata = '{\n  \"text\": \" ' + dataNew + '\"\n}';
   fs.writeFileSync('output.json',newdata,'utf-8');
   done = fs.readFileSync('output.json','utf-8');
@@ -150,7 +150,7 @@ app.get('/data/search/:name-:chapter', function(req, res) {
 });
 
 app.listen(1337, function() {
-  console.log('Example app listening on port 3000!');
+  console.log('Example app listening on port 1337!');
 });
 
 
