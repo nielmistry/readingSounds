@@ -16,7 +16,7 @@ function gluten_to_text (name){
     var contents = fs.readFileSync('http://gutendex.com/books/?search=' + name)//may jhave to change the file name
     var jsonContent = JSON.parse(contents);
     text_link = jsonContent.results[0].formats['text/plain; charset=us-ascii'];
-  };
+  }; 
 
 
 //below takes the link and downloads it to directory
@@ -31,7 +31,7 @@ function link_to_file(){
   });
 };
 
-link_to_file();
+gluten_to_text("hi");
 
 //below reads in chunk by chunk and only the desired chapter
 function read_to_desired(){
@@ -68,6 +68,7 @@ function write_to_file(){
   var input = fs.writeFileSync('input_chapter.txt', data,'utf-8');
   console.log("Done!!");
 };
+
 
 var done;
 JSONify();
@@ -140,6 +141,7 @@ function get_values()
 };
 
 amazingAI();
+
 var http = require('http');
 var express = require('express');
 var app = express();
@@ -149,7 +151,7 @@ app.get('/', function(req, res) {
 });
 
 app.get('/data/search/:name-:chapter', function(req, res) {
-  gluten_to_text(name);
+  //gluten_to_text(name);
   chapter_wanted_minus_1 = chapter - 1;
   res.send({"url": sendURL(req.params.name),"tone" : toneID});
 });
@@ -158,6 +160,8 @@ app.listen(32401, function() {
   console.log('Example app listening on port 1337!');
 });
 
+
+//gluten_to_text("hi");
 
 
 function sendURL(bookName)
@@ -176,6 +180,7 @@ function sendURL(bookName)
  }
 }
 
+/*
 
 http.createServer((request, response) => {
   response.setHeader('Access-Control-Allow-Origin', '*');
@@ -186,6 +191,6 @@ http.createServer((request, response) => {
     body = Buffer.concat(body).toString();
     response.end(body);
   });
-}).listen(1337);
+}).listen(1337); */
 
 
