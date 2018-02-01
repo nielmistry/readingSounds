@@ -10,6 +10,7 @@ var fs = require('fs')
 var data = '';
 //below reads  in the json and ouputs the link to text file.
 //below did not word due to the json file having 'text/plain; charset=us-ascii'
+
 function gluten_to_text (name){
   var fs = require('fs');
     var contents = fs.readFileSync('http://gutendex.com/books/?search=' + name)//may jhave to change the file name
@@ -45,7 +46,9 @@ function read_to_desired(){
     start = string_chapter.indexOf("CHAPTER");
     string_chapter = string_chapter.replace(/CHAPTER/, "");
     end = string_chapter.indexOf("CHAPTER");
-    scan_chapter++;
+    scan_
+
+chapter++;
   }
   if (end < 0)
   {
@@ -59,7 +62,7 @@ function read_to_desired(){
   write_to_file();
 };
 //below takes in the data of the chapter and makes it into a text read
-//to later be  converted into a json
+//to later be  converted into a  json
 function write_to_file(){
   var fs = require('fs');
   var input = fs.writeFileSync('input_chapter.txt', data,'utf-8');
@@ -70,9 +73,10 @@ var done;
 JSONify();
 
 function JSONify(){
-	var data = fs.readFileSync('Chapter_1.txt','utf-8');
+	var data = fs.readFileSync('input_chapter.txt','utf-8');
 	var dataNew = data.replace(/"/g,'\\"');
  dataNew = dataNew.replace(/[^\x00-\x7F]/g,'');
+dataNew = dataNew.replace(/\x2F/g,"");
  dataNew = dataNew.replace(/\n/g,'');
   newdata = '{\n  \"text\": \" ' + dataNew + '\"\n}';
   fs.writeFileSync('output.json',newdata,'utf-8');
@@ -136,6 +140,7 @@ function get_values()
 };
 
 amazingAI();
+var http = require('http');
 var express = require('express');
 var app = express();
 
@@ -149,7 +154,7 @@ app.get('/data/search/:name-:chapter', function(req, res) {
   res.send({"url": sendURL(req.params.name),"tone" : toneID});
 });
 
-app.listen(1337, function() {
+app.listen(32401, function() {
   console.log('Example app listening on port 1337!');
 });
 
@@ -171,7 +176,6 @@ function sendURL(bookName)
  }
 }
 
-/*
 
 http.createServer((request, response) => {
   response.setHeader('Access-Control-Allow-Origin', '*');
@@ -184,4 +188,4 @@ http.createServer((request, response) => {
   });
 }).listen(1337);
 
-*/
+

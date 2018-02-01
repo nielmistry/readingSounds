@@ -1,0 +1,85 @@
+var fs = require('fs');
+var done;
+JSONify();
+
+function JSONify(){
+	var data = fs.readFileSync('Chapter_1.txt','utf-8');
+	var dataNew = data.replace(/"/g,'\\"');
+	 dataNew = dataNew.replace(/[^\x00-\x7F]/g,'');
+	dataNew = dataNew.replace(/\n/g,'');
+	newdata = '{\n  \"text\": \" ' + dataNew + '\"\n}';
+	fs.writeFileSync('Chapter_1.json',newdata,'utf-8');
+	done = fs.readFileSync('Chapter_1.json','utf-8');
+	console.log("JSONIFY DONE");
+}
+
+console.log(done);
+var response;
+function amazingAI(){
+        var ToneAnalyserV3 = require('watson-developer-cloud/tone-analyzer/v3');
+        var tone_analyser = new ToneAnalyserV3({
+          username: '859b35a5-f631-4683-9ba3-52add7d63165',
+          password: 'hpHkNrMGSeOe',//remove before git (maybe)
+          version_date: '2017-09-21'
+        });
+
+        var params = {
+          'tone_input' : require('./Chapter_1.json'),
+          'content_type' : 'application/json',
+	'sentences' : false
+        };
+
+
+        tone_analyser.tone(params, function(error, response){
+          if (error)
+          console.log('error:', error);
+          else
+	{
+            console.log(JSON.stringify(response,null,2));
+		saveJSON(response);
+		get_values();
+	}
+        });
+      };
+
+function saveJSON(resp)
+{
+	var jsonfile = require('jsonfile');
+	var file = './response.json';
+	jsonfile.writeFileSync(file,resp)
+t//	get_values();
+};
+
+function get_values()
+{
+  var fs = require("fs");
+  var contents = fs.readFileSync("response.json");
+  var jsonContent = JSON.parse(contents);
+  var max = 0;
+  var max_index = -1;
+  for(iterator = 0; iterator < jsonContent.document_tone.tones.length; iterator++)
+  {
+    console.log("this is the something value", jsonContent.document_tone.tones[iterator].score);
+    if (max < jsonContent.document_tone.tones[iterator].score)
+      max = jsonContent.document_tone.tones[iterator].score;
+    max_index = iterator;
+  }
+  console.log("The type of music I want is", jsonContent.document_tone.tones[max_index].tone_id)
+};
+
+amazingAI();
+//get_values();
+
+
+const http = require('http');
+
+http.createServer((request, response) => {
+  let body = [];
+  request.on('data', (chunk) => {
+    body.push(chunk);
+  }).on('end', () => {
+    body = Buffer.concat(body).toString();
+    response.end(body);
+  });
+}).listen(1337);
+
