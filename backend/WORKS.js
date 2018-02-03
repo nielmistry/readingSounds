@@ -79,7 +79,7 @@ function write_to_file(){
   var input = fs.writeFileSync('input_chapter.txt', data,'utf-8');
   console.log("Done!!");
   //console.log(data);
-  white_space_begone();
+  // white_space_begone();
   JSONify();
 };
 //HERE NOT COMPLETE,INVISIBLE WHITE SPACE ZERO WIDTH THINGS IN FILE
@@ -105,12 +105,16 @@ function JSONify(){
   dataNew = dataNew.replace(/\r/g,'');
   dataNew = dataNew.replace(/\f/g,'');
   dataNew = dataNew.replace(/\t/g,'');
-  //THIS ONE IS ACTUALLY ABLE TO REMOVE ONE OF THEM dataNew = dataNew.replace(/(^[\s\u200b]*|[\s\u200b]*$)/g,'');
+  if (dataNew.length > 127982)
+  {
+    console.log("Size is too large, only doing last part.");
+    dataNew = dataNew.slice(-127984,-1);//this can go slightly higher however it depends on the compression which may or may not be consistent
+  }
   newdata = '{\n  \"text\": \" ' + dataNew + '\"\n}';
   fs.writeFileSync('Chapter_1.json',newdata);
   done = fs.readFileSync('Chapter_1.json');
   console.log("JSONIFY DONE");
-  console.log("done")
+  console.log("done");
   amazingAI();
 }
 

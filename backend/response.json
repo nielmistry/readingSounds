@@ -1,1 +1,1 @@
-{"document_tone":{"tones":[{"score":0.621544,"tone_id":"joy","tone_name":"Joy"},{"score":0.536487,"tone_id":"sadness","tone_name":"Sadness"}]}}
+{"document_tone":{"tones":[{"score":0.548479,"tone_id":"sadness","tone_name":"Sadness"},{"score":0.609614,"tone_id":"joy","tone_name":"Joy"}],"warning":"Input text exceeded API limit of 1,000 sentences"}}
