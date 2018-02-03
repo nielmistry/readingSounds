@@ -1,6 +1,7 @@
 //ony works for  some;
 var gluten_info;
 var book_wanted;
+var chapter;
 var chapter_wanted = 3;
 var chapter_wanted_minus_1 = chapter_wanted - 1;//put input here
 var text_link;
@@ -125,7 +126,7 @@ function amazingAI(){
   // console.log("right before chapter_1 json params");
   tone_analyser.tone(params, function(error, response){
     if (error)
-    // console.log('error:', error);
+     console.log('error:', error);
     else
     {
       // console.log(JSON.stringify(response,null,2));
