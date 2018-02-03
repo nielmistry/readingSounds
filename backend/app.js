@@ -2,6 +2,7 @@
 var gluten_info;
 var book_wanted;
 var chapter;
+var toneID;
 var chapter_wanted = 3;
 var chapter_wanted_minus_1 = chapter_wanted - 1;//put input here
 var text_link;
@@ -24,8 +25,13 @@ function gluten_to_text (){
   } while (text_link.indexOf(".txt") == -1);
   // start = string_chapter.indexOf("CHAPTER");
 };
-gluten_to_text();
 
+function go()
+{
+gluten_to_text();
+link_to_file();
+//amazingAI();
+}
 //below takes the link and downloads it to directory
 function link_to_file(){
   var http = require('http');
@@ -37,7 +43,7 @@ function link_to_file(){
   });
 };
 
-link_to_file();
+//link_to_file();
 
 //below reads in chunk by chunk and only the desired chapter
 function read_to_desired(){
@@ -109,7 +115,7 @@ function JSONify(){
 var response;
 
 function amazingAI(){
-  // console.log("in amazing AI");
+   console.log("in amazing AI");
   var ToneAnalyserV3 = require('watson-developer-cloud/tone-analyzer/v3');
   var tone_analyser = new ToneAnalyserV3({
     username: '859b35a5-f631-4683-9ba3-52add7d63165',
@@ -123,6 +129,7 @@ function amazingAI(){
     'sentences' : false
   };
 
+//console.log(tone_input);
   // console.log("right before chapter_1 json params");
   tone_analyser.tone(params, function(error, response){
     if (error)
@@ -138,6 +145,7 @@ function amazingAI(){
 
 function saveJSON(resp)
 {
+console.log("saving...");
   var jsonfile = require('jsonfile');
   var file = 'response.json';
   jsonfile.writeFileSync(file,resp)
@@ -160,9 +168,10 @@ function get_values()
     }
   };
   console.log("The type of music I want is", jsonContent.document_tone.tones[max_index].tone_id)
+toneID = jsonContent.document_tone.tones[max_index];
 }
 
-amazingAI();
+//amazingAI();
 
 var http = require('http');
 var express = require('express');
@@ -173,8 +182,9 @@ app.get('/', function(req, res) {
 });
 
 app.get('/data/search/:name-:chapter', function(req, res) {
-  gluten_to_text();
-  chapter_wanted_minus_1 = chapter - 1;
+ chapter_wanted_minus_1 = chapter - 1;
+ go();
+amazingAI();
   res.send({"url": sendURL(req.params.name),"tone" : toneID});
 });
 
@@ -188,13 +198,17 @@ app.listen(32400, function() {
 
 function sendURL(bookName)
 {
+//console.log( jsonContent);
   var epubLink;
- do {
+var search_index =  0;
+//console.log(jsonContent.results[search_index].formats['application/epub+zip']);
+do{
   epubLink = jsonContent.results[search_index].formats['application/epub+zip'];
-  if(epubLink == undefined)
+ console.log(search_index + epubLink); 
+if(epubLink == undefined)
     epubLink = "null";  
   search_index++;
-  } while (epubLink.indexOf(".epub.images") == -1 || epubLink.indexOf(".epub.noimages"));
+}while(epubLink.indexOf(".epub") == -1);
 
   return epubLink;
 // if(bookName === "Alice in Wonderland")
