@@ -4,6 +4,7 @@ var book_wanted;
 var chapter_wanted = 3;
 var chapter_wanted_minus_1 = chapter_wanted - 1;//put input here
 var text_link;
+var jsonContent;
 var scan_chapter = 0;
 var fs = require('fs');
 var data = '';
@@ -12,15 +13,14 @@ var data = '';
 function gluten_to_text (){
   var contents = fs.readFileSync('input_from_site.json'); //this one is for a test using alice
   //var contents = fs.readFileSync('gluten_info.json')//may jhave to change the file name
-  var jsonContent = JSON.parse(contents);
+  jsonContent = JSON.parse(contents);
   var search_index = 0;
-text_link = "indef";
   do {
-  text_link = jsonContent.results[search_index].formats['text/plain; charset=us-ascii'];
-if(text_link == undefined)
-text_link = "null";  
-search_index++;
-} while (text_link.indexOf(".txt") == -1);
+    text_link = jsonContent.results[search_index].formats['text/plain; charset=us-ascii'];
+    if(text_link == undefined)
+      text_link = "null";  
+    search_index++;
+  } while (text_link.indexOf(".txt") == -1);
   // start = string_chapter.indexOf("CHAPTER");
 };
 gluten_to_text();
@@ -126,8 +126,8 @@ function amazingAI(){
   tone_analyser.tone(params, function(error, response){
     if (error)
     // console.log('error:', error);
-    else
-    {
+  else
+  {
       // console.log(JSON.stringify(response,null,2));
       saveJSON(response);
       get_values();
@@ -172,13 +172,13 @@ app.get('/', function(req, res) {
 });
 
 app.get('/data/search/:name-:chapter', function(req, res) {
-  //gluten_to_text(name);
+  gluten_to_text();
   chapter_wanted_minus_1 = chapter - 1;
   res.send({"url": sendURL(req.params.name),"tone" : toneID});
 });
 
 app.listen(32400, function() {
-  console.log('Example app listening on port 1337!');
+  console.log('Example app listening on port 32401!');
 });
 
 
@@ -187,18 +187,27 @@ app.listen(32400, function() {
 
 function sendURL(bookName)
 {
-	if(bookName === "Alice in Wonderland")
-	{
-   return 'http:\/\/www.gutenberg.org\/ebooks\/11.epub.noimages';
- }
- else if(bookName === "My Man Jeeves")
- {
-   return 'http:\/\/www.gutenberg.org\/ebooks\/8164.epub.images';
- }
- else
- {
-   return 'google.com';
- }
+  var epubLink;
+ do {
+  epubLink = jsonContent.results[search_index].formats['application/epub+zip'];
+  if(epubLink == undefined)
+    epubLink = "null";  
+  search_index++;
+  } while (epubLink.indexOf(".epub.images") == -1 || epubLink.indexOf(".epub.noimages"));
+
+  return epubLink;
+// if(bookName === "Alice in Wonderland")
+// {
+//  return 'http:\/\/www.gutenberg.org\/ebooks\/11.epub.noimages';
+// }
+// else if(bookName === "My Man Jeeves")
+// {
+//  return 'http:\/\/www.gutenberg.org\/ebooks\/8164.epub.images';
+// }
+// else
+// {
+//  return 'google.com';
+// }
 }
 
 /*
