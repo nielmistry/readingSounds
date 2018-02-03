@@ -9,15 +9,22 @@ var fs = require('fs');
 var data = '';
 //below reads  in the json and ouputs the link to text file.
 //below did not word due to the json file having 'text/plain; charset=us-ascii'
+function gluten_length(contents){
+
+  var count = (contents.match(/text\/plain; charset=us-ascii/g) || []).length;
+  return count;
+}
+
 function gluten_to_text (){
   var contents = fs.readFileSync('test.json'); //this one is for a test using alice
   //var contents = fs.readFileSync('gluten_info.json')//may jhave to change the file name
   var jsonContent = JSON.parse(contents);
+  var length = gluten_length(contents);
   var search_index = 0;
   do {
   text_link = jsonContent.results[search_index].formats['text/plain; charset=us-ascii'];
   search_index++;
-} while (text_link.indexOf(".txt") == -1);
+} while (text_link.indexOf(".txt") == -1 && seach_index < length);
   // start = string_chapter.indexOf("CHAPTER");
 };
 gluten_to_text();
