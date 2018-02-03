@@ -1,4 +1,5 @@
 var bookName;
+var book;
 
 function hideAlerts()
 {
@@ -47,7 +48,7 @@ function loadBook(bookName)
 {
       "use strict";
            bookName = bookName + ".epub";
-            var book = ePub(bookName);
+            book = ePub(bookName);
             book.renderTo("area");
             document.getElementById('btnSelectBook').addEventListener('change', function (e) {
                 var file = e.target.files[0];
