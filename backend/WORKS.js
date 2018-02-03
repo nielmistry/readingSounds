@@ -10,21 +10,26 @@ var data = '';
 //below reads  in the json and ouputs the link to text file.
 //below did not word due to the json file having 'text/plain; charset=us-ascii'
 function gluten_length(contents){
-
-  var count = (contents.match(/text\/plain; charset=us-ascii/g) || []).length;
+  var str = contents.toString();
+  var count = (str.match(/text\/plain; charset=us-ascii/g) || []).length;
+  console.log(count);
   return count;
 }
 
 function gluten_to_text (){
-  var contents = fs.readFileSync('test.json'); //this one is for a test using alice
+  var contents = fs.readFileSync('input_from_site.json'); //this one is for a test using alice
   //var contents = fs.readFileSync('gluten_info.json')//may jhave to change the file name
-  var jsonContent = JSON.parse(contents);
   var length = gluten_length(contents);
+  var jsonContent = JSON.parse(contents);
   var search_index = 0;
   do {
   text_link = jsonContent.results[search_index].formats['text/plain; charset=us-ascii'];
+  if(text_link == undefined)
+    text_link = "null";
+  console.log(text_link);
   search_index++;
-} while (text_link.indexOf(".txt") == -1 && seach_index < length);
+  console.log(search_index);
+} while (search_index < length && text_link.indexOf(".txt") == -1);
   // start = string_chapter.indexOf("CHAPTER");
 };
 gluten_to_text();
@@ -99,6 +104,7 @@ function JSONify(){
   dataNew = dataNew.replace(/\n/g,' ');
   dataNew = dataNew.replace(/\r/g,'');
   dataNew = dataNew.replace(/\f/g,'');
+  dataNew = dataNew.replace(/\t/g,'');
   //THIS ONE IS ACTUALLY ABLE TO REMOVE ONE OF THEM dataNew = dataNew.replace(/(^[\s\u200b]*|[\s\u200b]*$)/g,'');
   newdata = '{\n  \"text\": \" ' + dataNew + '\"\n}';
   fs.writeFileSync('Chapter_1.json',newdata);
