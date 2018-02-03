@@ -68,7 +68,7 @@ function read_to_desired(){
 //to later be  converted into a json
 function write_to_file(){
   var input = fs.writeFileSync('input_chapter.txt', data,'utf-8');
-  console.log("Done!!");
+  // console.log("Done!!");
   //console.log(data);
   white_space_begone();
   JSONify();
@@ -85,7 +85,7 @@ function white_space_begone()
   // white_s = data.slice(15,16)
   // data = data.replace(white_s, '')
   // white_s = data.slice(15,16)
-  console.log(white_s + " this has a char value of: ");
+  // console.log(white_s + " this has a char value of: ");
   // console.log(white_s.charCodeAt(0));
 }
 
@@ -99,36 +99,36 @@ function JSONify(){
   newdata = '{\n  \"text\": \" ' + dataNew + '\"\n}';
   fs.writeFileSync('Chapter_1.json',newdata);
   done = fs.readFileSync('Chapter_1.json');
-  console.log("JSONIFY DONE");
-  console.log("done")
+  // console.log("JSONIFY DONE");
+  // console.log("done")
   amazingAI();
 }
 
-console.log("done");
+// console.log("done");
 var response;
 
 function amazingAI(){
-  console.log("in amazing AI");
+  // console.log("in amazing AI");
   var ToneAnalyserV3 = require('watson-developer-cloud/tone-analyzer/v3');
   var tone_analyser = new ToneAnalyserV3({
     username: '859b35a5-f631-4683-9ba3-52add7d63165',
     password: 'hpHkNrMGSeOe',//remove before git (maybe)
     version_date: '2017-09-21'
   });
-  console.log("did it get this far");
+  // console.log("did it get this far");
   var params = {
     'tone_input' : require('./Chapter_1.json'),
     'content_type' : 'application/json',
     'sentences' : false
   };
 
-  console.log("right before chapter_1 json params");
+  // console.log("right before chapter_1 json params");
   tone_analyser.tone(params, function(error, response){
     if (error)
-    console.log('error:', error);
+    // console.log('error:', error);
     else
     {
-      console.log(JSON.stringify(response,null,2));
+      // console.log(JSON.stringify(response,null,2));
       saveJSON(response);
       get_values();
     }
@@ -151,7 +151,7 @@ function get_values()
   var max_index = -1;
   for(iterator = 0; iterator < jsonContent.document_tone.tones.length; iterator++)
   {
-    console.log("this is the something value", jsonContent.document_tone.tones[iterator].score);
+    // console.log("this is the something value", jsonContent.document_tone.tones[iterator].score);
     if (max < jsonContent.document_tone.tones[iterator].score)
     {
       max = jsonContent.document_tone.tones[iterator].score;
